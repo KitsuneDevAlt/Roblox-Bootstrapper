@@ -70,25 +70,25 @@ private:
 #define FIREFOXREGKEY               "@nsroblox.roblox.com/launcher"
 #define FIREFOXREGKEY64             "@nsroblox.roblox.com/launcher64"
 
-#define PLAYERLINKNAME_CUR          "ROBLOX Player"
-#define PLAYERLINKNAMELEGACY        "Play Roblox"
+#define PLAYERLINKNAME_CUR          "Caelus Player"
+#define PLAYERLINKNAMELEGACY        "Play Caelus"
 
 // MFC Studio names
-#define STUDIOEXENAME               "RobloxStudio.exe"
-#define STUDIOBOOTSTAPPERNAME       "RobloxStudioLauncher.exe"
-#define STUDIOLINKNAMELEGACY        "Roblox Studio"    // wrong case
+#define STUDIOEXENAME               "CaelusStudio.exe"
+#define STUDIOBOOTSTAPPERNAME       "CaelusStudioLauncher.exe"
+#define STUDIOLINKNAMELEGACY        "Caelus Studio"    // wrong case
 
 // QT Studio names
-#define STUDIOQTEXENAME             "RobloxStudioBeta.exe"
-#define STUDIOBOOTSTAPPERNAMEBETA   "RobloxStudioLauncherBeta.exe"
-#define STUDIOQTLINKNAME_CUR        "ROBLOX Studio"
-#define STUDIOQTLINKNAME            "ROBLOX Studio Beta"
-#define STUDIOQTLINKNAME20          "ROBLOX Studio 2.0"
-#define STUDIOQTLINKNAME20BETA      "ROBLOX Studio 2.0 Beta"
-#define STUDIOQTLINKNAME2013        "ROBLOX Studio 2013"
+#define STUDIOQTEXENAME             "CaelusStudioBeta.exe"
+#define STUDIOBOOTSTAPPERNAMEBETA   "CaelusStudioLauncherBeta.exe"
+#define STUDIOQTLINKNAME_CUR        "Caelus Studio"
+#define STUDIOQTLINKNAME            "Caelus Studio Beta"
+#define STUDIOQTLINKNAME20          "Caelus Studio 2.0"
+#define STUDIOQTLINKNAME20BETA      "Caelus Studio 2.0 Beta"
+#define STUDIOQTLINKNAME2013        "Caelus Studio 2013"
 
 // Player names
-#define  PLAYEREXENAME				"RobloxPlayerBeta.exe"
+#define  PLAYEREXENAME				"CaelusPlayerBeta.exe"
 
 // Version URL string names (setup.roblox.com/XXX) - replace XXX with these values to get the most recent version
 // Unfortunately these have to be defined globally so Player knows how to find the latest version of Studio to download

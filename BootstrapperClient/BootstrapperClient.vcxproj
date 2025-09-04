@@ -177,7 +177,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>Iphlpapi.lib;taskschd.lib;mstask.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)RobloxPlayerLauncher.exe</OutputFile>
+      <OutputFile>$(OutDir)CaelusLauncher.exe</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>

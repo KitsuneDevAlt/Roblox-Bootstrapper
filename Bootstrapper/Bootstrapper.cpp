@@ -180,7 +180,7 @@ public:
 				else
 				{
 					CString message;
-					message.Format(_T("An error occured and Roblox cannot continue.\n\n%S"), e.what());
+					message.Format(_T("An error occured and Caelus cannot continue.\n\n%S"), e.what());
 					::MessageBox(NULL, message, _T("Error"), MB_OK | MB_ICONEXCLAMATION);
 				}
 				result = -1;
@@ -1002,7 +1002,7 @@ boost::shared_ptr<Bootstrapper> Bootstrapper::Create(HINSTANCE hInstance, Bootst
 			CTimedMutexLock l1(m1);
 			if (l1.Lock(1) == WAIT_TIMEOUT)
 			{
-				LLOG_ENTRY(result->logger, "No bg update, Roblox App is running");
+				LLOG_ENTRY(result->logger, "No bg update, Caelus App is running");
 				return result;
 			}
 
@@ -1128,7 +1128,7 @@ void Bootstrapper::RegisterUninstall(const TCHAR *productName)
 
 	std::wstring uninstallString = format_string(_T("\"%s%s\" -uninstall%s"), programDirectory().c_str(), GetBootstrapperFileName().c_str(), perUser ? _T("") : _T(" -alluser"));
 	throwHRESULT (keyProductCode.SetStringValue(_T("UninstallString"), uninstallString.c_str(), REG_EXPAND_SZ), "Failed to set UninstallString key");
-	throwHRESULT (keyProductCode.SetStringValue(_T("Publisher"), _T("ROBLOX Corporation")), "Failed to set Publisher key");
+	throwHRESULT (keyProductCode.SetStringValue(_T("Publisher"), _T("KitsuKitsu")), "Failed to set Publisher key");
 	throwHRESULT (keyProductCode.SetStringValue(_T("URLInfoAbout"), _T("http://www.roblox.com")), "Failed to set URLInfoAbout key");
 	throwHRESULT (keyProductCode.SetStringValue(_T("Comments"), convert_s2w(installVersion).c_str()), "Failed to set Comments key");
 	throwHRESULT (keyProductCode.SetStringValue(_T("InstallLocation"), programDirectory().c_str()), "Failed to set InstallLocation key");
@@ -1175,7 +1175,7 @@ void Bootstrapper::RegisterProtocolHandler(const std::wstring& protocolScheme, c
 
 	// register the protocol handler scheme
 	CRegKey key = CreateKey(isPerUser() ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE, (_T("SOFTWARE\\Classes\\") + protocolScheme).c_str());
-	throwHRESULT(key.SetStringValue(_T(""), _T("URL: Roblox Protocol")), format_string("failed to set value for protocol"));
+	throwHRESULT(key.SetStringValue(_T(""), _T("URL: Caelus Protocol")), format_string("failed to set value for protocol"));
 	throwHRESULT(key.SetStringValue(_T("URL Protocol"), _T("")), format_string("failed to set value for protocol"));
 
 	CreateKey(key, _T("DefaultIcon"), exePath.c_str());
@@ -1299,7 +1299,7 @@ void Bootstrapper::validateAndFixChromeState()
 			if (retried)
 			{
 				int res = dialog->MessageBox(
-					_T("Roblox might not launch correctly if Chrome is open or running in the background during installation.\n\n")
+					_T("Caelus might not launch correctly if Chrome is open or running in the background during installation.\n\n")
 					_T("Automatically shutdown all instances of Chrome and continue?"), _T("Warning"), MB_YESNOCANCEL);
 
 				if (res == IDYES)
@@ -1600,7 +1600,7 @@ bool Bootstrapper::checkBootstrapperVersion()
 	moduleVersionNumber = vi.GetFileVersionAsString();
 	LOG_ENTRY1("module file version: %s", moduleVersionNumber.c_str());
 
-	message("Connecting to ROBLOX...");
+	message("Connecting to Caelus...");
 	try
 	{
 		installVersion = fetchVersionGuid(); // TODO: Why is this setting the installVersion?
@@ -1682,7 +1682,7 @@ bool Bootstrapper::checkBootstrapperVersion()
 
 			try
 			{
-				message("Getting the latest Roblox...");
+				message("Getting the latest Caelus...");
 
 				// We could use an "exe" extension, but hiding the type isn't a bad idea?
 				newBootstrapper = simple_logger<wchar_t>::get_temp_filename(_T("tmp"));
@@ -1728,7 +1728,7 @@ bool Bootstrapper::checkBootstrapperVersion()
 
 void Bootstrapper::writeAppSettings()
 {
-	message("Configuring ROBLOX...");
+	message("Configuring Caelus...");
 
 	std::wstring appSettings(programDirectory() + _T("AppSettings.xml"));
 	std::ofstream file(appSettings.c_str());
@@ -1872,7 +1872,7 @@ void Bootstrapper::checkOSPrerequisit()
 
 	LOG_ENTRY("checkOSPrerequisit failed");
 	if (windowed)
-		dialog->DisplayError("Roblox requires Microsoft Windows XP SP1 or greater", NULL);
+		dialog->DisplayError("Caelus requires Microsoft Windows XP SP1 or greater", NULL);
 	throw installer_error_exception(installer_error_exception::OsPrerequisite);
 }
 
@@ -1882,7 +1882,7 @@ void Bootstrapper::checkCPUPrerequisit()
 	{
 		LOG_ENTRY("checkCPUPrerequisit failed");
 	    if (windowed)
-		    dialog->DisplayError("Roblox requires SSE2 support", NULL);
+		    dialog->DisplayError("Caelus requires SSE2 support", NULL);
 		throw installer_error_exception(installer_error_exception::CpuPrerequisite);
 	}
 }
@@ -1903,31 +1903,11 @@ void Bootstrapper::checkDirectXPrerequisit()
 
 void Bootstrapper::checkIEPrerequisit()
 {
-	if (!isIEUpToDate())
-	{
-		LOG_ENTRY("checkIEPrerequisit failed");
-		if (windowed)
-			dialog->DisplayError("Roblox requires Microsoft Internet Explorer 6.0 or greater", NULL);
-		throw installer_error_exception(installer_error_exception::IePrerequisite);
-	}
+
 }
 
 bool Bootstrapper::isIEUpToDate()
 {
-	CRegKey key;
-	if (ERROR_SUCCESS!=key.Open(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Microsoft\\Internet Explorer"), KEY_READ))
-		return false;
-
-	TCHAR buffer[256];
-	ULONG size = 256;
-	if (ERROR_SUCCESS!=key.QueryStringValue(_T("Version"), buffer, &size))
-		return false;
-
-	// TODO: Parse version string properly
-	// http://support.microsoft.com/kb/164539
-	if (buffer[0]<'6')
-		return false;
-
 	return true;
 }
 
@@ -2077,7 +2057,7 @@ void Bootstrapper::checkDiskSpace()
 	::GetDiskFreeSpaceEx(programDirectory().c_str(), &freeBytesAvailableToCaller, NULL, NULL);
 	if (freeBytesAvailableToCaller.QuadPart < 40*1e6)
 	{
-		dialog->DisplayError("There is not enough room on your disk to install Roblox. Please free up some space and try again.", NULL);
+		dialog->DisplayError("There is not enough room on your disk to install Caelus. Please free up some space and try again.", NULL);
 		throw installer_error_exception(installer_error_exception::DiskSpacePrerequisite);
 	}
 }
@@ -2142,10 +2122,10 @@ void Bootstrapper::run()
 			LOG_ENTRY("Error: IsNetworkAlive failed");
 			if (windowed && isLatestProcess())
 			{
-				CString message = _T("Roblox cannot connect to the Internet\n\nDoes your computer have a working network connection?  Is antivirus software preventing Roblox from accessing the Internet?");
+				CString message = _T("Caelus cannot connect to the Internet\n\nDoes your computer have a working network connection?  Is antivirus software preventing Caelus from accessing the Internet?");
 				if (!robloxAppArgs.empty())
 				{
-					message += _T("\n\nIf you continue Roblox may not work properly.");
+					message += _T("\n\nIf you continue Caelus may not work properly.");
 					// TODO: CTaskDialog should use nice command buttons
 					if (dialog->MessageBox(message, _T("Error"), MB_OKCANCEL | MB_ICONEXCLAMATION)==IDOK)
 					{
@@ -2178,10 +2158,10 @@ void Bootstrapper::run()
 
 			if (windowed && isLatestProcess())
 			{
-				CString message = _T("Cannot connect to the Roblox website.\n\nIs antivirus software preventing Roblox from accessing the Internet?");
+				CString message = _T("Cannot connect to the Caelus website.\n\nIs antivirus software preventing Caelus from accessing the Internet?");
 				if (!robloxAppArgs.empty())
 				{
-					message += _T("\n\nIf you continue Roblox may not work properly.");
+					message += _T("\n\nIf you continue Caelus may not work properly.");
 					if (dialog->MessageBox(message, _T("Error"), MB_OKCANCEL | MB_ICONEXCLAMATION)==IDOK)
 					{
 						installVersion = queryInstalledVersion();
@@ -2202,7 +2182,7 @@ void Bootstrapper::run()
 			if(queryInstalledVersion() != installVersion) 
 				throw non_zero_exit_exception();
 
-			LOG_ENTRY("Roblox is up to date, returning success");
+			LOG_ENTRY("Caelus is up to date, returning success");
 			goto done;
 		}
 
@@ -2447,7 +2427,7 @@ void Bootstrapper::run()
 	catch (non_zero_exit_exception&)
 	{
 		exitCode = 1;
-		LOG_ENTRY("Roblox is not up to date, returning failure");
+		LOG_ENTRY("Caelus is not up to date, returning failure");
 	}
 	catch (silent_exception&)
 	{
@@ -2936,7 +2916,7 @@ void Bootstrapper::install()
 			if (!perUser && !IsAdminRunning())
 			{
 				if (windowed)
-					dialog->DisplayError("On this machine you must install Roblox using an Administrator account", NULL);
+					dialog->DisplayError("On this machine you must install Caelus using an Administrator account", NULL);
 				throw installer_error_exception(installer_error_exception::AdminAccountRequired);
 			}
 		}
