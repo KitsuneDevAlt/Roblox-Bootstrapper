@@ -458,25 +458,26 @@ namespace HttpTools
 		urlCracked = u.CrackUrl(host.c_str());
 #endif
 
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_context;
 
-		tcp::socket socket(io_service);
+		tcp::socket socket(io_context);
 
 		// Get a list of endpoints corresponding to the server name.
-		tcp::resolver resolver(io_service);
+		tcp::resolver resolver(io_context);
 
 		std::string port = urlCracked ? boost::lexical_cast<std::string>(u.GetPortNumber()) : "http";
 		std::string hostName = urlCracked ? convert_w2s(u.GetHostName()) : host;
-		tcp::resolver::query query(hostName, port);
 		
-		tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
-		tcp::resolver::iterator end;
+		tcp::resolver::results_type endpoints = resolver.resolve(hostName, port);
+
+		auto endpoint_iterator = endpoints.begin();
+		auto end = endpoints.end();
 
 		if (httpBoostPostTimeout > 0 && !std::strcmp(method, "POST"))
 		{
 			DWORD timeout = httpBoostPostTimeout * 1000;
-			setsockopt(socket.native(), SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof(timeout));
-			setsockopt(socket.native(), SOL_SOCKET, SO_SNDTIMEO, (const char*)&timeout, sizeof(timeout));
+			//setsockopt(socket.native(), SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof(timeout));
+			//setsockopt(socket.native(), SOL_SOCKET, SO_SNDTIMEO, (const char*)&timeout, sizeof(timeout));
 		}
 
 		// Try each endpoint until we successfully establish a connection.

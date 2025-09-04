@@ -452,70 +452,10 @@ void Bootstrapper::ReportElapsedEvent(bool startingGameClient)
 }
 
 void Bootstrapper::reportDurationAndSizeEvent(const char* category, const char* result, DWORD duration, DWORD size) {
-	try {
-
-		// TODO: Remove calls to JoinRate.ashx
-		std::string handlerUrlPart = format_string(
-			"/Game/JoinRate.ashx?c=%s&r=%s&d=%ld&platform=Win32",
-			category, result, duration);
-		if (size > 0) {
-			handlerUrlPart += format_string("&b=%ld", size);
-		}
-
-		std::ostrstream result;
-		HttpTools::httpGet(this, baseHost, handlerUrlPart, std::string(),
-			result, false, boost::bind(&Bootstrapper::dummyProgress, _1, _2));
-		////////////////////////////////
-
-
-		// new stats reporting api
-		char* apiPathFormatStr = "/game/report-stats?name=%s&value=%ld";
-		
-		std::string durationName = format_string("%s%s_Duration", category, result);
-		HttpTools::httpPost(this, baseHost, format_string(apiPathFormatStr, durationName.c_str(), duration), std::stringstream(""), "*/*",
-			result, false, boost::bind(&Bootstrapper::dummyProgress, _1, _2));
-
-		if (size > 0)
-		{
-			std::string sizeName = format_string("%s%s_Size", category, result);
-			HttpTools::httpPost(this, baseHost, format_string(apiPathFormatStr, sizeName.c_str(), size), std::stringstream(""), "*/*",
-				result, false, boost::bind(&Bootstrapper::dummyProgress, _1, _2));
-		}
-
-	} catch (const std::exception& e) {
-		LOG_ENTRY1("Error in reporting: %s", e.what());
-	}
 }
 
 void Bootstrapper::reportFinishingHelper(const char* category, const char* result) {
-	// Use bootstrapper type to differentiate reports by pre-pending Type().
-	std::string builtCategory(Type());
-	builtCategory += category;
-	reportDurationAndSizeEvent(builtCategory.c_str(), result, GetElapsedTime(), 0/*no size metric*/);
 
-	// Add result to category for ephemeral counter
-	builtCategory += result;
-	RegisterEvent(convert_s2w(builtCategory).c_str());
-
-	// Report to influxdb
-	influxDb.addPoint("Category", category);
-	influxDb.addPoint("Result", result);
-	influxDb.addPoint("Duration", GetElapsedTime() / 1000.0f); // report duration in seconds
-	ReportToInfluxDb(InfluxDbReportHundredthsPercentage(), influxDb.getJsonStringForPosting("BootstrapperDuration"), true);
-
-	// log client failure by cdn
-	if (result != "Success" && Type() == "Client")
-	{
-		std::string installUrl;
-		if (UseNewCdn())
-			installUrl = HttpTools::getCdnHost(this);
-		if (installUrl.empty())
-			installUrl = HttpTools::getPrimaryCdnHost(this);
-
-		std::string action(category);
-		action += result;
-		GoogleAnalyticsHelper::trackEvent(logger, GA_CATEGORY_NAME, action.c_str(), installUrl.empty() ? installHost.c_str() : installUrl.c_str());
-	}
 }
 
 void Bootstrapper::ReportFinishing(const char* result) {
@@ -859,13 +799,13 @@ void Bootstrapper::parseCmdLine()
 				std::wstring argName = argList[i].substr(0, separatorPos);
 				std::transform(argName.begin(), argName.end(), argName.begin(), tolower);
 				std::wstring argValue = argList[i].substr(separatorPos + 1, std::wstring::npos);
-				argMap.insert(std::make_pair<std::wstring, std::wstring>(argName, argValue));
+				argMap.insert(std::make_pair(argName, argValue));
 			}
 			else
 			{
 				std::wstring argName = argList[i];
 				std::transform(argName.begin(), argName.end(), argName.begin(), tolower);
-				argMap.insert(std::make_pair<std::wstring, std::wstring>(argName, _T("")));
+				argMap.insert(std::make_pair(argName, _T("")));
 			}
 		}
 

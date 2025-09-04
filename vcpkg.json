@@ -1,0 +1,33 @@
+{
+  "name": "kitsukitsune",
+  "version": "1.0.0",
+  "dependencies": [
+    {
+      "name": "boost-asio",
+      "default-features": true      
+    },
+    {
+      "name": "boost-thread",
+      "default-features": true
+    },
+    {
+      "name": "boost-lexical-cast",
+      "default-features": true
+    },
+    {
+      "name": "boost-foreach",
+      "default-features": true
+    },
+    {
+      "name": "boost-lexical-cast",
+      "default-features": true
+    },
+    {
+      "name": "boost-property-tree",
+      "default-features": true
+    },
+    "rapidjson",
+    "zlib",
+    "minizip"
+  ]
+}

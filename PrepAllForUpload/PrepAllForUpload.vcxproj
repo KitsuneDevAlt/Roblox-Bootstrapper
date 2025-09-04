@@ -136,28 +136,6 @@
   <ItemGroup>
     <Text Include="..\BootstrapperClient.PrepForUpload\readme.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BootstrapperClient.PrepForUpload\BootstrapperClient.PrepForUpload.vcxproj">
-      <Project>{6635fc6b-fc50-4009-aca3-efd8af03607b}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\BootstrapperQTStudio.PrepForUpload\BootstrapperQTStudio.PrepForUpload.vcxproj">
-      <Project>{d3150abf-850a-45c8-9d1c-c7b36e958576}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\BootstrapperRccService.PrepForUpload\BootstrapperRccService.PrepForUpload.vcxproj">
-      <Project>{2d9bff1d-bdef-4dd9-82a3-85c1d96ddd37}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\NPRobloxProxy.PrepForUpload\NPRobloxProxy.PrepForUpload.vcxproj">
-      <Project>{843cf3f6-14ea-4d45-a660-dcc8348cd4b3}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\RobloxProxy.PrepForUpload\RobloxProxy.PrepForUpload.vcxproj">
-      <Project>{62f169a2-3326-4e3c-97c2-b56b43bb6828}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
