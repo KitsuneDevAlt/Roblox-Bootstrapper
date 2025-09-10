@@ -182,8 +182,8 @@ IDB_CLIENT_TEXT         BITMAP                  "assets\\txt_success-player@1x.b
 
 STRINGTABLE 
 BEGIN
-    IDS_INSTALLHOST         "setup.roblox.com"
-    IDS_BASEHOST            "www.roblox.com"
+    IDS_INSTALLHOST         "setup.caelus.lol"
+    IDS_BASEHOST            "www.caelus.lol"
     IDS_SUCCESS1            "CAELUS IS SUCCESSFULLY INSTALLED!"
     IDS_SUCCESS2            "Just click the ""Play"" button on any game to join the action!"
     IDS_STUDIO_SUCCESS1     "CAELUS STUDIO IS SUCCESSFULLY INSTALLED!"

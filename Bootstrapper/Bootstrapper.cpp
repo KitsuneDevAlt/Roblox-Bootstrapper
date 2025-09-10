@@ -1129,7 +1129,7 @@ void Bootstrapper::RegisterUninstall(const TCHAR *productName)
 	std::wstring uninstallString = format_string(_T("\"%s%s\" -uninstall%s"), programDirectory().c_str(), GetBootstrapperFileName().c_str(), perUser ? _T("") : _T(" -alluser"));
 	throwHRESULT (keyProductCode.SetStringValue(_T("UninstallString"), uninstallString.c_str(), REG_EXPAND_SZ), "Failed to set UninstallString key");
 	throwHRESULT (keyProductCode.SetStringValue(_T("Publisher"), _T("KitsuKitsu")), "Failed to set Publisher key");
-	throwHRESULT (keyProductCode.SetStringValue(_T("URLInfoAbout"), _T("http://www.roblox.com")), "Failed to set URLInfoAbout key");
+	throwHRESULT (keyProductCode.SetStringValue(_T("URLInfoAbout"), _T("http://www.caelus.lol")), "Failed to set URLInfoAbout key");
 	throwHRESULT (keyProductCode.SetStringValue(_T("Comments"), convert_s2w(installVersion).c_str()), "Failed to set Comments key");
 	throwHRESULT (keyProductCode.SetStringValue(_T("InstallLocation"), programDirectory().c_str()), "Failed to set InstallLocation key");
 	throwHRESULT (keyProductCode.SetDWORDValue(_T("NoModify"), 1), "Failed to set NoModify key");
@@ -3066,7 +3066,7 @@ void Bootstrapper::setLatestProcess()
 {
 	int pid = _getpid();
 
-	const std::string latestProcessName = format_string("www.roblox.com/%s/%s/latestProcess", installHost.c_str(), Type().c_str());
+	const std::string latestProcessName = format_string("www.caelus.lol/%s/%s/latestProcess", installHost.c_str(), Type().c_str());
 
 	latestProcess.Attach(CreateFileMapping(
 			 INVALID_HANDLE_VALUE,    // use paging file

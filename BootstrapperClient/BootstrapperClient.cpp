@@ -26,8 +26,8 @@
 
 static const TCHAR* BootstrapperFileName    = _T("RobloxPlayerLauncher.exe");
 static const TCHAR* RobloxAppFileName		= _T(PLAYEREXENAME);
-static const TCHAR* BootstrapperMutexName   = _T("www.roblox.com/bootstrapper");
-static const TCHAR* StartRobloxAppMutex     = _T("www.roblox.com/startRobloxApp");
+static const TCHAR* BootstrapperMutexName   = _T("www.caelus.lol/bootstrapper");
+static const TCHAR* StartRobloxAppMutex     = _T("www.caelus.lol/startRobloxApp");
 static const TCHAR* LauncherFileName        = _T("RobloxProxy.dll");
 static const TCHAR* LauncherFileName64      = _T("RobloxProxy64.dll");
 static const TCHAR* FriendlyName            = _T("Caelus");
@@ -702,7 +702,7 @@ void BootstrapperClient::StartRobloxApp(bool fromInstall)
 	message("Starting Caelus...");
 
 	LOG_ENTRY("Creating event");
-	CEvent robloxStartedEvent(NULL, TRUE, FALSE, _T("www.roblox.com/robloxStartedEvent"));
+	CEvent robloxStartedEvent(NULL, TRUE, FALSE, _T("www.caelus.lol/robloxStartedEvent"));
 	LOG_ENTRY("Resetting event");
 	robloxStartedEvent.Reset();
 
@@ -972,131 +972,30 @@ void BootstrapperClient::deployStudioBetaBootstrapper(bool forceDesktopIconCreat
 
 void BootstrapperClient::deployRobloxProxy(bool commitData)
 {
-	deployer->deployVersionedFile(_T("RobloxProxy.zip"), NULL, Progress(), commitData);
-	CheckCancel();
-
-	if (!commitData)
-	{
-		return;
-	}
-
-	if (!isPerUser())
-	{
-		//Global install in process, so remove local settings to prevent conflicts
-		CRegKey ckey;
-		if (!FAILED(ckey.Open(HKEY_CURRENT_USER, _T("Software\\Classes"))))
-			proxyModule.unregisterModule(ckey, true, logger);
-	}
-
-	proxyModule.registerModule(classesKey, programDirectory(), logger);
-
-	// create the 64 bit keys
-	CRegKey classesKey64;
-	throwHRESULT(classesKey64.Create(isPerUser() ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE, _T("Software\\Classes"), REG_NONE, REG_OPTION_NON_VOLATILE, KEY_READ | KEY_WRITE | KEY_WOW64_64KEY), "Failed to create 64 bits HK**\\Software\\Classes");
-	LOG_ENTRY1("classesKey64 = %s\\Software\\Classes", (isPerUser() ? "HKEY_CURRENT_USER" : "HKEY_LOCAL_MACHINE"));
-	proxyModule64.registerModule(classesKey64, programDirectory(), logger);
-
-	{
-		// IE hack to avoid DLL security warning
-		// Ideally we'd just register the DLL as pre-approved, but this doesn't work in HKCU, only HKLM
-		CRegKey key;
-		throwHRESULT(key.Create(HKEY_CURRENT_USER, format_string(_T("Software\\Microsoft\\Windows\\CurrentVersion\\Ext\\Stats\\%s\\iexplore"), CLSID_Launcher).c_str()), "Failed to create key for iexplorer stats");
-		key.SetDWORDValue(_T("Flags"), 4);
-
-		// For IE8:
-		CRegKey allowedDomainsKey = CreateKey(key, _T("AllowedDomains"));
-		CreateKey(allowedDomainsKey, _T("roblox.com"));
-		CreateKey(allowedDomainsKey, _T("robloxlabs.com"));
-	}
-
-	CVersionInfo vi;
-	std::wstring filePath = programDirectory() + _T("\\RobloxProxy.dll");
-	if (vi.Load(filePath))
-	{
-		std::string version = vi.GetFileVersionAsString();
-		CRegKey installKey;
-		if (!FAILED(installKey.Open(isPerUser() ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE, GetRegistryPath().c_str())))
-			installKey.SetStringValue(_T("Plug-in version"), convert_s2w(version).c_str());
-	}
+	
 }
 
 void BootstrapperClient::deployNPRobloxProxy(bool commitData)
 {
-	deployer->deployVersionedFile(_T("NPRobloxProxy.zip"), NULL, Progress(), commitData);
-	CheckCancel();
 
-	if (!commitData)
-	{
-		return;
-	}
-
-	unregisterFirefoxPlugin(_T(FIREFOXREGKEY), false);
-	unregisterFirefoxPlugin(_T(FIREFOXREGKEY64), true);
-
-	registerFirefoxPlugin(_T(FIREFOXREGKEY), false);
-	registerFirefoxPlugin(_T(FIREFOXREGKEY64), true);
 }
 
 void BootstrapperClient::registerFirefoxPlugin(const TCHAR* id, bool is64Bits)
 {
-	HKEY parent = HKEY_CURRENT_USER;
-	CRegKey key = CreateKey(parent, format_string(_T("SOFTWARE\\MozillaPlugins\\%s"), id).c_str(), NULL, is64Bits);
 
-	key.SetStringValue(_T("ProductName"), _T("Launcher"));
-	key.SetStringValue(_T("Description"), _T("Roblox Launcher"));
-	key.SetStringValue(_T("Vendor"), _T("Roblox"));
-	key.SetStringValue(_T("Version"), _T("1"));
-
-	if (is64Bits)
-		key.SetStringValue(_T("Path"), (programDirectory() + _T("\\NPRobloxProxy64.dll")).c_str());
-	else
-		key.SetStringValue(_T("Path"), (programDirectory() + _T("\\NPRobloxProxy.dll")).c_str());
-
-	CreateKey(parent, format_string(_T("SOFTWARE\\MozillaPlugins\\%s\\MimeTypes"), id).c_str(), NULL, is64Bits);
-	CreateKey(parent, format_string(_T("SOFTWARE\\MozillaPlugins\\%s\\MimeTypes\\application/x-vnd-roblox-launcher"), id).c_str(), NULL, is64Bits);
 }
 
 void BootstrapperClient::unregisterFirefoxPlugin(const TCHAR* id, bool is64Bits)
 {
-	CRegKey mozillaKey;
-	REGSAM sam = KEY_READ | KEY_WRITE;
-	if (is64Bits)
-		sam |= KEY_WOW64_64KEY;
 
-	if(!FAILED(mozillaKey.Open(HKEY_CURRENT_USER,_T("Software\\MozillaPlugins"), sam))){
-		DeleteKey(logger, mozillaKey, id);
-	}
 }
 
 void BootstrapperClient::DeployComponents(bool isUpdating, bool commitData)
 {
 	std::vector<std::pair<std::wstring, std::wstring> > files;
-	createDirectory((programDirectory() + _T("content")).c_str());
-	createDirectory((programDirectory() + _T("content\\fonts")).c_str());
-	createDirectory((programDirectory() + _T("content\\music")).c_str());
-	createDirectory((programDirectory() + _T("content\\particles")).c_str());
-	createDirectory((programDirectory() + _T("content\\sky")).c_str());
-	createDirectory((programDirectory() + _T("content\\sounds")).c_str());
-	createDirectory((programDirectory() + _T("content\\textures")).c_str());
-	createDirectory((programDirectory() + _T("PlatformContent")).c_str());
-	createDirectory((programDirectory() + _T("PlatformContent\\pc")).c_str());
-	createDirectory((programDirectory() + _T("PlatformContent\\pc\\textures")).c_str());
-	createDirectory((programDirectory() + _T("PlatformContent\\pc\\terrain")).c_str());
-	createDirectory((programDirectory() + _T("shaders")).c_str());
 
-	files.push_back(std::pair<std::wstring, std::wstring>(_T("redist.zip"), _T("")));
-	files.push_back(std::pair<std::wstring, std::wstring>(_T("RobloxApp.zip"), _T("")));
-	files.push_back(std::pair<std::wstring, std::wstring>(_T("Libraries.zip"), _T("")));
-	files.push_back(std::pair<std::wstring, std::wstring>(_T("content-fonts.zip"), _T("content\\fonts\\")));
-	files.push_back(std::pair<std::wstring, std::wstring>(_T("content-music.zip"), _T("content\\music\\")));
-	files.push_back(std::pair<std::wstring, std::wstring>(_T("content-particles.zip"), _T("content\\particles\\")));
-	files.push_back(std::pair<std::wstring, std::wstring>(_T("content-sky.zip"), _T("content\\sky\\")));
-	files.push_back(std::pair<std::wstring, std::wstring>(_T("content-sounds.zip"), _T("content\\sounds\\")));
-	files.push_back(std::pair<std::wstring, std::wstring>(_T("content-textures.zip"), _T("content\\textures\\")));
-	files.push_back(std::pair<std::wstring, std::wstring>(_T("content-textures2.zip"), _T("content\\textures\\")));
-	files.push_back(std::pair<std::wstring, std::wstring>(_T("content-textures3.zip"), _T("PlatformContent\\pc\\textures\\")));
-	files.push_back(std::pair<std::wstring, std::wstring>(_T("content-terrain.zip"), _T("PlatformContent\\pc\\terrain\\")));
-	files.push_back(std::pair<std::wstring, std::wstring>(_T("shaders.zip"), _T("shaders\\")));
+	//I am not doing it in folders right now.
+	files.push_back(std::pair<std::wstring, std::wstring>(_T("2020.zip"), _T("")));
 
 	DoDeployComponents(files, isUpdating, commitData);
 }

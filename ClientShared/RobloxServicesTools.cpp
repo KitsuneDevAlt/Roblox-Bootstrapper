@@ -9,7 +9,7 @@
 #ifdef RBX_PLATFORM_DURANGO
 #define DEFAULT_URL_SCHEMA "https"
 #else
-#define DEFAULT_URL_SCHEMA "http"
+#define DEFAULT_URL_SCHEMA "https"
 #endif
 
 std::string trim_trailing_slashes(const std::string &path) 
@@ -21,7 +21,7 @@ std::string trim_trailing_slashes(const std::string &path)
 static std::string BuildGenericApiUrl(const std::string &baseUrl, const std::string &serviceNameIn, const std::string &path, const std::string &key, const char* scheme = "https")
 {
     std::string serviceName(serviceNameIn);
-    std::string rbxUrl = ".roblox.com";
+    std::string rbxUrl = ".caelus.lol";
 	size_t pos = baseUrl.find(rbxUrl);
 	if (pos == std::string::npos)
 	{
@@ -49,23 +49,23 @@ static std::string BuildGenericApiUrl(const std::string &baseUrl, const std::str
 	if (subUrl.empty())
 	{
 		// production
-		url = format_string("%s://%sapi.roblox.com/%s/?apiKey=%s", scheme, serviceName.c_str(), path.c_str(), key.c_str());
+		url = format_string("%s://%scaelus.lol/%s", scheme, serviceName.c_str(), path.c_str());
 	}
 	else
 	{
 		if (subUrl.find("www") != -1)
 		{
 			subUrl = subUrl.replace(0, 4, "");
-			url = format_string("%s://%sapi.%s%s/%s/?apiKey=%s", scheme, serviceName.c_str(), subUrl.c_str(), rbxUrl.c_str(), path.c_str(), key.c_str());
+			url = format_string("%s://%s%s%s/%s", scheme, serviceName.c_str(), subUrl.c_str(), rbxUrl.c_str(), path.c_str());
 		}
         else if(subUrl.find("m.") == 0)
         {
             subUrl = subUrl.replace(0, 2, "");
-			url = format_string("%s://%sapi.%s%s/%s/?apiKey=%s", scheme, serviceName.c_str(), subUrl.c_str(), rbxUrl.c_str(), path.c_str(), key.c_str());
+			url = format_string("%s://%s%s%s/%s", scheme, serviceName.c_str(), subUrl.c_str(), rbxUrl.c_str(), path.c_str());
         }
 		else if (subUrl.find(".sitetest3") != -1) // Special case for URLs like alberto.sitetest3, navin.sitetest3, etc..
 		{
-			url = format_string("%s://%sapi.sitetest3%s/%s/?apiKey=%s", scheme, serviceName.c_str(), rbxUrl.c_str(), path.c_str(), key.c_str());
+			url = format_string("%s://%ssitetest3%s/%s", scheme, serviceName.c_str(), rbxUrl.c_str(), path.c_str());
 		}
 	}
 
@@ -84,7 +84,7 @@ std::string GetCountersMultiIncrementUrl(const std::string &baseUrl, const std::
 
 std::string GetSettingsUrl(const std::string &baseUrl, const std::string &group, const std::string &key)
 {
-    return BuildGenericApiUrl(baseUrl, "clientsettings", format_string("Setting/QuietGet/%s", group.c_str()), key, DEFAULT_URL_SCHEMA);
+    return BuildGenericApiUrl(baseUrl, "clientsettingscdn", format_string("/v1/settings/application?applicationName=%s", group.c_str()), key, DEFAULT_URL_SCHEMA);
 }
 
 std::string GetSecurityKeyUrl(const std::string &baseUrl, const std::string &key)

@@ -15,11 +15,11 @@ DATA_MAP_IMPL_START(ClientInstallerSettings)
 	IMPL_DATA(ExeVersion, "");
 	IMPL_DATA(GoogleAnalyticsAccountPropertyID, "UA-43420590-15");
 	IMPL_DATA(ValidateInstalledExeVersion, false);
-	IMPL_DATA(UseNewCdn, false); 
+	IMPL_DATA(UseNewCdn, false);
 	IMPL_DATA(UseNewVersionFetch, false);
 	IMPL_DATA(CheckIsStudioOutofDate, false);
 	IMPL_DATA(HttpBoostPostTimeout, 0);
-	IMPL_DATA(ShowInstallSuccessPrompt, false);
+	IMPL_DATA(ShowInstallSuccessPrompt, true);
 	IMPL_DATA(LogChromeProtocolFix, false);
 	IMPL_DATA(InfluxUrl, "");
 	IMPL_DATA(InfluxDatabase, "Default");

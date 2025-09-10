@@ -13,10 +13,10 @@
 // TODO - rename to just "Roblox Studio"
 static const TCHAR* BootstrapperQTStudioFileName    = _T(STUDIOBOOTSTAPPERNAMEBETA);
 static const TCHAR* RobloxStudioAppFileName         = _T(STUDIOQTEXENAME);
-static const TCHAR* BootstrapperMutexName           = _T("www.roblox.com/bootstrapperQTStudio");
-static const TCHAR* StartRobloxStudioAppMutex       = _T("www.roblox.com/startRobloxQTStudioApp");
+static const TCHAR* BootstrapperMutexName           = _T("www.caelus.lol/bootstrapperQTStudio");
+static const TCHAR* StartRobloxStudioAppMutex       = _T("www.caelus.lol/startRobloxQTStudioApp");
 static const TCHAR* FriendlyName                    = _T("ROBLOX Studio");
-static const TCHAR* StartEvent                      = _T("www.roblox.com/robloxQTStudioStartedEvent");
+static const TCHAR* StartEvent                      = _T("www.caelus.lol/robloxQTStudioStartedEvent");
 
 static Bootstrapper* newBootstrapper(HINSTANCE hInstance)
 {

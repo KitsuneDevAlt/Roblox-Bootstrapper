@@ -8,9 +8,8 @@
 
 #include <Psapi.h>
 
-// can't use these on windows xp :(
-//#include <dwmapi.h>
-//#pragma comment (lib, "dwmapi.lib")
+#include <dwmapi.h>
+#pragma comment (lib, "dwmapi.lib")
 
 #define IDT_TIMER 1
 const static int WM_MARQUEE = WM_USER + 101;		// See Q196026 
@@ -242,8 +241,8 @@ void CProgressDialog::OnCreate(HWND hWnd)
 	int height = rect.bottom - rect.top;
 
 	// can't use these on windows xp
-	//MARGINS borderless = {1,1,1,1};
-	//HRESULT hr = DwmExtendFrameIntoClientArea(hWnd, &borderless);
+	MARGINS borderless = {1,1,1,1};
+	HRESULT hr = DwmExtendFrameIntoClientArea(hWnd, &borderless);
 
 	// set up logo
 	int logoSize = 90;
